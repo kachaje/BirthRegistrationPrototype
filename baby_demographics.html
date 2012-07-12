@@ -1,0 +1,128 @@
+<html>
+    <head>
+        <title>Baby Demographics</title>
+        <meta http-equiv='content-type' content='text/html;charset=UTF-8' />
+        <script language='javascript' type='text/javascript' src='lib/javascripts/touchScreenToolkit.js' defer></script>
+        <script language="javascript">
+            tstUsername = "";
+            tstCurrentDate = "2010/03/12";
+            tt_cancel_destination = 'patient_dashboard.html';
+            tt_cancel_show = 'patient_dashboard.html';
+            
+            function saveRecord(){
+                var id = (localStorage.auto_increment == null ? 1 : (parseInt(localStorage.auto_increment) + 1));
+                
+                sessionStorage.current_id = id;
+                localStorage.auto_increment = id;                
+                
+                sessionStorage.current_date_of_birth = __$("date_of_birth").value;
+                sessionStorage.current_sex = __$("sex").value;
+                
+                var person = {};
+                
+                var people = (localStorage.people != null ? JSON.parse(localStorage.people) : {});
+                
+                person["first_name"] = __$("first_name").value;
+                person["middle_name"] = __$("middle_name").value;
+                person["last_name"] = __$("last_name").value;
+                person["date_of_birth"] = __$("date_of_birth").value;
+                person["sex"] = __$("sex").value;
+                person["identifier"] = "P" + padZeros(id, 7);
+                
+                people[id] = person;
+                
+                localStorage.people = JSON.stringify(people);
+                
+                delete sessionStorage.search
+            }
+            
+            function assignKnowns(){
+                if(sessionStorage.current_id != null){
+                    var person = {};
+                
+                    var people = (localStorage.people != null ? JSON.parse(localStorage.people) : {});
+                
+                    person = people[sessionStorage.current_id];
+                    
+                    __$("first_name").value = person["first_name"];
+                    __$("middle_name").value = person["middle_name"];
+                    __$("last_name").value = person["last_name"];
+                    __$("date_of_birth").value = person["date_of_birth"];
+                    __$("sex").value = person["sex"];
+                    
+                    __$("touchscreenInput" + tstCurrentPage).value = person["first_name"];
+                    
+                } else {
+                    
+                    __$("first_name").value = sessionStorage.current_first_name;
+                    __$("middle_name").value = sessionStorage.current_middle_name;
+                    __$("last_name").value = sessionStorage.current_last_name;
+                
+                }
+                
+            }
+            
+            timer = setTimeout("assignKnowns()", 500);
+        </script>
+    </head>
+    <body><div id='content'>
+            <div id='description' style='color:#777;position:absolute;margin-top:-70px;'></div><center>
+                <form  action='patient_dashboard.html' method="post">
+                    <table cellpadding=10>
+                        <tr>
+                            <th colspan=2>Baby Demographics</th>
+                        </tr>
+                        <tr>
+                            <td>Baby First Name</td>
+                            <td>
+                                <input type='text' position='b' value='' field_type='text' 
+                                       condition="sessionStorage.search != 'true'" 
+                                       name='first_name' id='first_name' helptext='Baby First Name'
+                                       tt_onLoad="assignKnowns()"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Baby Middle Name</td>
+                            <td>
+                                <input type='text' position='c' value='' field_type='text' optional
+                                       condition="sessionStorage.search != 'true'"  
+                                       name='middle_name' id='middle_name' helptext='Baby Middle Name' />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Baby Last Name</td>
+                            <td>
+                                <input type='text' position='d' value='' field_type='text'  
+                                       condition="sessionStorage.search != 'true'" 
+                                       name='last_name' id='last_name' helptext='Baby Last Name' />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Baby Date Of Birth</td>
+                            <td>
+                                <input type='text' position='e' value='' field_type='date' 
+                                       name='date_of_birth' id='date_of_birth' helptext='Baby Date Of Birth' />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Baby Sex</td>
+                            <td>
+                                <select position='f' style='width: 100%' name='sex' id='sex' helptext='Baby Sex'
+                                        tt_onUnLoad="saveRecord()">
+                                    <option></option>
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align='center'>
+                                <input type='submit' value='Finish' />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </center>
+        </div>
+    </body>
+</html>

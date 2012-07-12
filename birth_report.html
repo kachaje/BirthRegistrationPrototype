@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>Birth Report</title>
+        <script language='javascript' type='text/javascript' src='lib/javascripts/touchScreenToolkit.js' defer></script>
+        <script language="javascript">
+            tstUsername = "";
+            tstCurrentDate = "2010/03/12";
+            tt_cancel_destination = 'patient_dashboard.html';
+            tt_cancel_show = 'patient_dashboard.html';
+        </script>
+
+        <style>
+            #main {
+                width: 99.7%;
+                height: 88.5%;
+                overflow: auto;
+            }
+
+            button{
+                margin: 5px;
+            }
+        </style>
+    </head>
+    <body id="mateme">  
+        <div id="container">
+            <div id="content">
+                <iframe id="main" src="birth_report_printable.html"></iframe>
+
+                <div style="z-index:11;bottom:0px; height: 82px; width: 100%; left: 0px;
+                     right: -66px; position: absolute; background-color: #333333; padding: 0px;">
+                    <button onclick="window.location = 'patient_dashboard.html';" class="button navButton red"
+                            id="cancelButton" style="position: absolute; z-index: 100; margin-top: 10px;"><span>Cancel</span>
+                    </button>
+
+                    <button onclick="window.location = 'patient_dashboard.html';" class="button navButton green"
+                            id="nextButton" style="margin-top: 10px; margin-right: 20px;" ><span>Finish</span>
+                    </button>
+                    <button onclick="window.location = 'patient_dashboard.html';" class="button navButton blue"
+                            id="backButton" style="margin-top: 10px;" ><span>Back</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

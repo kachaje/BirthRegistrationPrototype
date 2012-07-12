@@ -1,0 +1,393 @@
+<html>
+    <head>
+        <title>Baby Demographics</title>
+        <meta http-equiv='content-type' content='text/html;charset=UTF-8' />
+        <script language='javascript' type='text/javascript' src='lib/javascripts/touchScreenToolkit.js' defer></script>
+        <script language="javascript">
+            tstUsername = "";
+            tstCurrentDate = "2010/03/12";
+            tt_cancel_destination = 'home.html';
+            tt_cancel_show = 'home.html';
+        </script>
+        <style>
+            #num{ display:none; }
+            #char{ display:none; }
+        </style>
+
+        <script type="text/javascript">                                   
+            var people;
+                
+            var remote_people = (localStorage.people != null ? JSON.parse(localStorage.people) : {});
+
+            function changeNextButtonText(text, pos){
+                __$('nextButton').innerHTML = "<span>" + text + "</span>";
+    
+                if(pos){
+                    // document.forms[0].action = "create";
+                    
+                    document.forms[0].action = "patient_dashboard.html";                    
+                    
+                    __$('nextButton').onmousedown = function(){
+                        document.forms[0].submit();
+                    }
+      
+                    clearFields();
+      
+                    pos = parseInt(pos);
+      
+                    var fields = [
+                        "identifier", 
+                        "gender",
+                        "given_name",
+                        "family_name",
+                        "family_name2",
+                        "address2",
+                        "relation",
+                        "birthdate",
+                        "birthdate_estimated",
+                        "state_province",
+                        "city_village",
+                        "county_district",
+                        "occupation",
+                        "cell_phone_number",
+                        "national_id"
+                    ]
+    
+                    /*createControlAndAssignValue("remote", "remote", "true");
+    
+                    for(var i = 0; i < fields.length; i++){
+                        switch(fields[i]){
+                            case "identifier":
+                                createControlAndAssignValue("identifier", "person[identifiers]",
+                                remote_people[pos]["person"]["data"]["patient"]["identifiers"]["diabetes_number"]);
+                                break;
+                            case "gender":
+                                createControlAndAssignValue("gender", "person[gender]", 
+                                remote_people[pos]["person"]["gender"]);
+                                break;
+                            case "given_name":
+                                createControlAndAssignValue("given_name", "person[names][given_name]", 
+                                remote_people[pos]["person"]["given_name"]);
+                                break;
+                            case "family_name":
+                                createControlAndAssignValue("family_name", "person[names][family_name]", 
+                                remote_people[pos]["person"]["family_name"]);
+                                break;
+                            case "family_name2":
+                                break;
+                            case "address2":
+                                createControlAndAssignValue("address2", "person[addresses][address2]",
+                                remote_people[pos]["person"]["data"]["addresses"]["address2"]);
+                                break;
+                            case "relation":
+                                break;
+                            case "birthdate":
+                                try{
+                                    var birthdate = new Date(remote_people[pos]["person"]["data"]["birthdate"]);
+              
+                                    if(birthdate){
+                                        createControlAndAssignValue("person_birth_year", "person[birth_year]",
+                                        birthdate.getFullYear());
+              
+                                        createControlAndAssignValue("person_birth_month", "person[birth_month]",
+                                        birthdate.getMonth() + 1);
+              
+                                        createControlAndAssignValue("person_birth_day", "person[birth_day]",
+                                        birthdate.getDate());
+                                    }
+                                } catch(e){}
+                                break;
+                            case "birthdate_estimated":
+                                createControlAndAssignValue("birthdate_estimated", "person[age_estimate]",
+                                remote_people[pos]["person"]["data"]["birthdate_estimated"]);
+                                break;
+                            case "state_province":
+                                createControlAndAssignValue("state_province", "person[addresses][state_province]",
+                                remote_people[pos]["person"]["data"]["addresses"]["state_province"]);
+                                break;
+                            case "city_village":
+                                createControlAndAssignValue("city_village", "person[addresses][city_village]",
+                                remote_people[pos]["person"]["data"]["addresses"]["city_village"]);
+                                break;
+                            case "county_district":
+                                createControlAndAssignValue("county_district", "person[addresses][county_district]",
+                                remote_people[pos]["person"]["data"]["addresses"]["county_district"]);
+                                break;
+                            case "occupation":
+                                createControlAndAssignValue("occupation", "person[occupation]",
+                                remote_people[pos]["person"]["data"]["attributes"]["occupation"]);
+                                break;
+                            case "cell_phone_number":
+                                createControlAndAssignValue("cellphone", "person[cell_phone_number]",
+                                remote_people[pos]["person"]["data"]["attributes"]["cell_phone_number"]);
+                                break;
+                            case "national_id":
+                                createControlAndAssignValue("national_id", "person[patient][identifiers][National id]", 
+                                remote_people[pos]["person"]["value"]);
+                                break;
+                        }
+                    }
+                     */
+                } else {
+                    if(sessionStorage.next_search_url != null){
+                        document.forms[0].action = sessionStorage.next_search_url;
+                    } else {
+                        document.forms[0].action = "baby_demographics.html";
+                    }
+                    
+                    saveRecord();
+                    __$('nextButton').onmousedown = function(){
+                        gotoNextPage();
+                    }
+      
+                    addFields();
+                }
+            }
+
+            function createControlAndAssignValue(control, name, value){
+                if(!__$(control)){
+                    var hidden = document.createElement("input");
+                    hidden.type = "hidden";
+                    hidden.id = control;
+                    hidden.value = "";
+      
+                    document.forms[0].appendChild(hidden);
+                }
+    
+                __$(control).name = name;
+                __$(control).value = value;
+            }
+
+            function newSearch(){
+                gotoNextPage();
+            }
+   
+            function makeRemoteButton(){
+                //__$('backButton').setAttribute("onmousedown","search_remote();");
+                //__$('backButton').style.display = "block";
+            }
+    
+            function createNewSearchButton(){
+                $('clearButton').innerHTML = "<span>New Search</span>";
+                $('clearButton').setAttribute("onmousedown","newSearch();");            
+            }
+
+            function newSearch() {
+                window.location = window.location.href;
+            }
+
+            function setAttributes() {
+                var buttondiv = __$("buttons");
+                buttondiv = document.getElementById("buttons");
+                buttondiv.innerHTML += "<div id='tt_extraButtons'></div>"
+                buttondiv.innerHTML+= "<button class='button navButton' id='newSearch' onmousedown='newSearch();'><span>New search</span></button>"
+                   
+            }
+   
+            function search_remote(){
+                gotoPage((tstCurrentPage - 1), false, true);
+            }
+  
+            function loadPatient(){
+                __$("summary").innerHTML = "";
+                remote_people = JSON.parse(ajaxGeneralRequestResult);
+    
+                people = [{}];
+    
+                var targetElement = tstFormElements[__$("touchscreenInput"+tstCurrentPage).getAttribute("refersToTouchscreenInputID")];
+    
+                var opts = __$("tt_currentUnorderedListOptions").getElementsByTagName("li");
+                var selOptions = targetElement.getElementsByTagName("option");
+
+                for(var i = opts.length-1; i > 0; i--){
+                    if(opts[i].id > 0){
+                        __$("tt_currentUnorderedListOptions").removeChild(opts[i]);
+                    }
+                }
+    
+                for(var j = selOptions.length-1; j > 1; j--){      
+                    targetElement.removeChild(selOptions[j]);
+                }
+    
+                var pos = 1
+                for(var i = 0; i < remote_people.length; i++){
+                    people.push({});
+      
+                    people[pos]["Name"] = remote_people[i]["person"]["data"]["names"]["given_name"] + 
+                        " " + remote_people[i]["person"]["data"]["names"]["family_name"];
+      
+                    people[pos]["Gender"] = ((remote_people[i]["person"]["data"]["gender"].length > 0) ? 
+                        (remote_people[i]["person"]["data"]["gender"] == "M" ? "Male" : "Female") : "");
+      
+                    people[pos]["Birthdate"] = remote_people[i]["person"]["birthdate"];
+      
+                    try{
+                        var t = new Date();
+                        var d = new Date(remote_people[i]["person"]["birthdate"]);
+
+                        var age = (t.getFullYear() - d.getFullYear());
+        
+                        people[pos]["Age"] = age;
+                    } catch(e){}
+      
+                    people[pos]["Home District"] = remote_people[i]["person"]["data"]["addresses"]["state_province"];
+      
+                    people[pos]["Ancestral Traditional Authority(T/A)"] = remote_people[i]["person"]["data"]["addresses"]["county_district"];
+      
+                    people[pos]["Current Residence"] = remote_people[i]["person"]["data"]["addresses"]["city_village"];
+      
+                    people[pos]["Patient National ID"] = remote_people[i]["person"]["value"];
+      
+                    var li = document.createElement("li");
+                    li.id = i + 1;
+                    li.className = ((i + 1)/2 > 0 ? "odd" : "even");
+                    li.setAttribute("tstvalue", i + 1);
+                    li.setAttribute("pos", i);
+                    li.innerHTML = people[pos]["Name"] + " (" + people[pos]["Gender"] + ") " + 
+                        people[pos]["Birthdate"] + ", " + people[pos]["Home District"];
+                    li.setAttribute("tag", ((i + 1)/2 > 0 ? "odd" : "even"));
+                    li.onmousedown = function(){
+                        changeNextButtonText('Select Patient', this.getAttribute("pos")); 
+                        updateTouchscreenInputForSelect(this); 
+                        changeSummary(this.id);
+                    }
+                    li.onclick = function(){
+                        changeNextButtonText('Select Patient', this.getAttribute("pos")); 
+                        updateTouchscreenInputForSelect(this); 
+                        changeSummary(this.id);
+                    }
+      
+                    __$("tt_currentUnorderedListOptions").appendChild(li);
+      
+                    var selOption = document.createElement("option");
+                    selOption.innerHTML = li.innerHTML;
+                    selOption.setAttribute("value", i + 1);
+      
+                    targetElement.appendChild(selOption);
+      
+                    pos++;
+                }
+    
+                tstDualViewOptions = people;
+            }
+  
+            function saveRecord(){
+                sessionStorage.current_first_name = __$("first_name").value;
+                sessionStorage.current_middle_name = __$("middle_name").value;
+                sessionStorage.current_last_name = __$("last_name").value;
+                
+                sessionStorage.search = true;
+            }
+            
+            function setName(){
+                __$("optCreateNew").innerHTML = "Create a new person with the name " + 
+                    __$("first_name").value + " " + __$("middle_name").value + " " + 
+                    __$("last_name").value;
+            }
+            
+            function setPaths(){
+                if(sessionStorage.back_search_url != null){
+                    tt_cancel_destination = sessionStorage.back_search_url;
+                    tt_cancel_destination = sessionStorage.back_search_url;
+                }
+            }
+            
+            function searchAndLoad(){
+                var remotes = [];
+                
+                __$('backButton').style.display = "none";
+                
+                for(var item in remote_people){
+                    remotes.push(remote_people[item]);
+                }
+                
+                remote_people = remotes;
+                tstDualViewOptions = remotes;
+                
+                var name = __$("first_name").value.trim() + " " + __$("middle_name").value.trim() + 
+                    " " + __$("last_name").value.trim();
+                
+                for(var person in remote_people){
+                    var current = remote_people[person]["first_name"] + " " + remote_people[person]["middle_name"] + 
+                        " " + remote_people[person]["last_name"];
+                    
+                    if(name.toLowerCase() == current.toLowerCase()){
+                        var li = document.createElement("li");
+                    
+                        li.innerHTML = remote_people[person]["first_name"] + " " + remote_people[person]["middle_name"] + 
+                            " " + remote_people[person]["last_name"];
+                        li.setAttribute("tstvalue", person);
+                    
+                        li.className = ((person)/2 > 0 ? "odd" : "even");
+                        li.setAttribute("pos", person);
+                    
+                        li.setAttribute("tag", ((person)/2 > 0 ? "odd" : "even"));
+                        li.onmousedown = function(){
+                            changeNextButtonText('Select Patient', this.getAttribute("pos")); 
+                            updateTouchscreenInputForSelect(this); 
+                            sessionStorage.current_id = this.getAttribute("tstvalue");
+                            changeSummary(this.id);
+                        }
+                        li.onclick = function(){
+                            changeNextButtonText('Select Patient', this.getAttribute("pos")); 
+                            updateTouchscreenInputForSelect(this); 
+                            sessionStorage.current_id = this.getAttribute("tstvalue");
+                            changeSummary(this.getAttribute("tstvalue"));
+                        }
+                    
+                        __$("tt_currentUnorderedListOptions").appendChild(li);
+                    }
+                }
+            }
+            
+        </script>
+    </head>
+    <body onload = "setTimeout('setAttributes();', 300);">
+        <div id='content'>
+            <div id='description' style='color:#777;position:absolute;margin-top:-70px;'></div>
+            <center>
+                <form action="" method="get">
+
+                    <input type='text' position='b' value='' field_type='text' tt_onLoad="setPaths()"
+                           name='first_name' id='first_name' helptext='First Name' />
+
+                    <input type='text' position='c' value='' field_type='text' optional
+                           name='middle_name' id='middle_name' helptext='Middle Name' />
+
+                    <input type='text' position='d' value='' field_type='text' 
+                           name='last_name' id='last_name' helptext='Last Name' tt_onUnload="setName()" />
+
+                    <label for="person">Select the name from the following</label>
+                    <select name="person[id]" id="person" dualView="true" dualViewOptions="remote_people" tt_onLoad="searchAndLoad()">
+                        <option id="optCreateNew" value="0" onmousedown="changeNextButtonText('New Person')">
+                            Create a new person with the name
+                        </option>                
+                    </select>
+                    <input type='submit' value='Finish' />
+                </form>
+            </center>
+        </div>
+        <script type="text/javascript" lang="javascript">
+            <!--
+            var ctrls = ["identifier", "gender", "given_name", "family_name", "family_name2", "address2", "relation"];
+        
+            function clearFields(){
+                for(var i = 0; i < ctrls.length; i++){
+                    if(__$(ctrls[i])){
+                        __$(ctrls[i]).removeAttribute("name");
+                    }
+                }
+            }
+        
+            function addFields(){
+                for(var i = 0; i < ctrls.length; i++){
+                    if(__$(ctrls[i])){
+                        __$(ctrls[i]).setAttribute("name", ctrls[i]);
+                    }
+                }
+            }
+        
+            //-->
+        </script>
+    </body>
+</html>

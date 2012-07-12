@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <title>Home Page</title>
+        <script type="text/javascript" language="javascript" src="lib/javascripts/touchScreenToolkit.js" defer ></script>
+        <meta http-equiv='content-type' content='text/html;charset=UTF-8' />
+        <script language="javascript">
+            tstUsername = "";
+            tt_cancel_destination = 'patient_dashboard.html';
+            tt_cancel_show = 'patient_dashboard.html';
+        </script>
+    </head>
+    <body>
+        <div id="home">
+            <div id="project_name">
+                <div style="font-size: 0.2em; padding-top: 10px; color: #6281A7;">
+                    <img src="images/emblem.gif" alt="emblem" height="70" width="72" /><br/>
+                    Birth Registration
+                </div>
+            </div>
+            <select id="tabs">
+                <option value="overview.html" link="overview.html">
+                    Overview
+                </option>
+                <!--option value="">
+                    Reports
+                </option-->
+
+                <!--option value="">
+                    Administration
+                </option-->
+
+            </select>
+
+            <div id="facility">Facility</div>
+            <div id="location">Workstation Location</div>
+
+            <div id="date">
+                <script type="text/javascript" language="javascript">
+                    (new Date()).getFullYear() + "-" + ((new Date()).getMonth() + 1) + "-" + (new Date()).getDay()
+                </script>
+            </div>
+            <div id="user">User Name</div>
+
+            <select id="links">
+                <option value='index.html' link='index.html'>Logout</option>
+                <option value='search.html' link='search.html' ttSize="290px">Find / Register Baby</option>
+                <option value=''  ttSize="100px">Set Date</option>
+                <option value='report.html'  ttSize="100px">Report</option>
+            </select>
+
+        </div>
+    </body>
+</html>

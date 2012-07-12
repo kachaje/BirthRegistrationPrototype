@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>Overview</title>
+    </head>
+    <body>
+        <table cellpadding="10">
+            <tr>
+                <td>
+                    <h2>Overview</h2>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding-left: 50px;">
+                    Cumulative Baby Count:
+                </td>
+                <td id="count">
+
+                </td>
+            </tr>
+        </table>
+        <script type="text/javascript" language="javascript">
+            
+            var people = (localStorage.people != null ? JSON.parse(localStorage.people) : {});
+                
+            function __$(id){
+                return document.getElementById(id);
+            }
+            
+            var count = 0;
+            
+            for(var f in people){
+                count++;
+            }
+            
+            __$("count").innerHTML = count;
+            
+        </script>
+    </body>
+</html>

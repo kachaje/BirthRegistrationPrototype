@@ -1,0 +1,113 @@
+<html>
+    <head>
+        <title>Patient Dashboard</title>
+        <meta http-equiv='content-type' content='text/html;charset=UTF-8' />
+        <script language='javascript' type='text/javascript' src='lib/javascripts/touchScreenToolkit.js' defer></script>
+        <script language="javascript">
+            tstUsername = "";
+            tstCurrentDate = "2010/03/12";
+            tt_cancel_destination = '';
+            tt_cancel_show = '';
+            
+            delete sessionStorage.next_search_url;
+            delete sessionStorage.back_search_url;
+            delete sessionStorage.search;
+            
+            if(sessionStorage.current_id != null){
+                var person = {};
+                
+                var people = (localStorage.people != null ? JSON.parse(localStorage.people) : {});
+                
+                person = people[sessionStorage.current_id];
+                    
+                if(typeof(person["father_first_name"]) != "undefined"){
+                    sessionStorage.father_known = "true";
+                }
+            }
+            
+            function resetFinish(){
+                __$('btnNext').onclick = function(){
+                    while(sessionStorage.length > 0){
+                        eval("delete sessionStorage." + sessionStorage[0]);
+                    }
+                    window.location = "home.html";
+                }
+            }
+            
+            setTimeout("resetFinish()", 500);
+        </script>
+    </head>
+    <body><div id='content'>
+            <div id='description' style='color:#777;position:absolute;margin-top:-70px;'></div><center>
+                <form id = 'dashboard' action=''>
+                    <table cellpadding=10>
+                        <tr>
+                            <th colspan=2>Patient Dashboard</th>
+                        </tr>
+                        <h1 id='project_name'>
+                            <div style="font-size: 0.4em; padding-top: 10px; color: #6281A7;">Birth<br/>Registration</div>
+                        </h1>
+                        <div id="custom_banner" path="custom_banner.html"></div>
+                        <span id='patient_name'>Test Baby</span>
+                        <span id='patient_id'>P00002</span>
+                        <!--span id='patient_residence'>18/1453</span-->
+                        <span id='patient_age'>3 (months)</span>
+                        <span id='patient_gender'>Female</span>
+                        <select position='j2' id="tabs">
+                            <option value='summary.html'>Summary</option>
+                            <!--option value='siblings.html'>Siblings</option-->
+                        </select>
+                        <select position='j2' id="links">
+                            <option value='baby_demographics.html'>Baby Demographics</option>
+                            <option value='mother_demographics.html'>Mother Demographics</option>
+                            <option value='father_demographics.html'>Father Demographics</option>
+                            <option value='birth_report.html'>Birth Report</option>
+                        </select>
+                        <select id="navigation_links">
+                            <option link="home.html" ttSize = "160px">Cancel</option>
+                            <option link="home.html" ttSize = "160px">Finish</option>
+                            <option link='user_details.html' ttSize = "180px">Provider Details</option>
+                        </select>
+                        <tr>
+                            <td align='center'>
+                                <input type='submit' value='Finish' />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </center>
+        </div>
+        <script type="text/javascript" language="javascript">
+            <!--
+            
+            function setFields(){
+                var id = sessionStorage.current_id;
+                
+                if(id != null && localStorage.people != null){
+                    var people = JSON.parse(localStorage.people);
+                    
+                    __$("detailsTopic").innerHTML = people[id]["first_name"] + " " + people[id]["last_name"];
+                    __$("idvalue").innerHTML = ": " + people[id]["identifier"];
+                    
+                    var dob = people[id]["date_of_birth"];
+                    if(dob != null){
+                        var d = new Date(dob);
+                        var n = new Date();
+
+                        var age = Math.floor((n - d) / (4 * 7 * 24 * 60 * 60 * 1000));
+                        
+                        __$("agevalue").innerHTML = ": " + age + " months";
+                    } else {
+                        __$("agevalue").innerHTML = ":";
+                    }
+                }
+            }
+            
+            setTimeout("setFields()", 200);
+            
+            // setTimeout("__$('nav').getElementsByTagName('button')[0].className='green';", 500);
+            
+            //-->
+        </script>
+    </body>
+</html>

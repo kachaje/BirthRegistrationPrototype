@@ -1,0 +1,219 @@
+<html>
+    <head>
+        <title>Mother Demographics</title>
+        <meta http-equiv='content-type' content='text/html;charset=UTF-8' />
+        <script language='javascript' type='text/javascript' src='lib/javascripts/touchScreenToolkit.js' defer></script>
+        <script language="javascript">
+            tstUsername = "";
+            tstCurrentDate = "2010/03/12";
+            tt_cancel_destination = 'patient_dashboard.html';
+            tt_cancel_show = 'patient_dashboard.html';
+            
+            if(sessionStorage.current_id != null){
+                var person = {};
+                
+                var people = (localStorage.people != null ? JSON.parse(localStorage.people) : {});
+                
+                person = people[sessionStorage.current_id];
+                    
+                if(typeof(person["mother_first_name"]) == "undefined" && 
+                    sessionStorage.next_search_url != "mother_demographics.html"){
+                    
+                    sessionStorage.next_search_url = "mother_demographics.html"
+                    sessionStorage.back_search_url = "patient_dashboard.html";
+                    window.location = "search.html";
+                }
+            } else {
+                delete sessionStorage.next_search_url;
+                delete sessionStorage.back_search_url;
+            }
+            
+            function saveRecord(){
+                
+                var person = {};
+                
+                var people = (localStorage.people != null ? JSON.parse(localStorage.people) : {});
+                
+                person = people[sessionStorage.current_id];
+                                
+                person["mother_first_name"] = __$("first_name").value;
+                person["mother_middle_name"] = __$("middle_name").value;
+                person["mother_last_name"] = __$("last_name").value;
+                person["mother_maiden_name"] = __$("maiden_name").value;
+                person["mother_nationality"] = __$("nationality").value;  
+                
+                if(__$("nationality").value == "Other"){
+                    person["mother_specify"] = __$("specify").value;  
+                } else {
+                    delete person["mother_specify"];
+                }
+                
+                person["mother_id_no"] = __$("id_no").value; 
+                person["mother_home_district"] = __$("home_district").value; 
+                person["mother_ta"] = __$("ta").value; 
+                person["mother_village"] = __$("village").value; 
+                person["mother_physical_address"] = __$("physical_address").value; 
+                
+                localStorage.people = JSON.stringify(people);
+                
+                delete sessionStorage.search
+            }
+            
+            function assignKnowns(){
+                if(sessionStorage.current_id != null){
+                    var person = {};
+                
+                    var people = (localStorage.people != null ? JSON.parse(localStorage.people) : {});
+                
+                    person = people[sessionStorage.current_id];
+                              
+                    if(typeof(person["mother_first_name"]) != "undefined"){
+                        __$("first_name").value = person["mother_first_name"];
+                        __$("middle_name").value = person["mother_middle_name"];
+                        __$("last_name").value = person["mother_last_name"];
+                        __$("maiden_name").value = person["mother_maiden_name"];
+                        __$("nationality").value = person["mother_nationality"];  
+                
+                        if(__$("nationality").value == "Other"){
+                            __$("specify").value = person["mother_specify"];  
+                        } 
+                
+                        __$("id_no").value = person["mother_id_no"]; 
+                        __$("home_district").value = person["mother_home_district"]; 
+                        __$("ta").value = person["mother_ta"]; 
+                        __$("village").value = person["mother_village"]; 
+                        __$("physical_address").value = person["mother_physical_address"]; 
+                    } else {
+                        __$("first_name").value = sessionStorage.current_first_name;
+                        __$("middle_name").value = sessionStorage.current_middle_name;
+                        __$("last_name").value = sessionStorage.current_last_name;        
+                    }
+                    
+                    __$("touchscreenInput" + tstCurrentPage).value = (typeof(person["mother_first_name"]) == "undefined" ? 
+                        sessionStorage.current_first_name : person["mother_first_name"]);
+                    
+                } else {
+                    
+                    __$("first_name").value = sessionStorage.current_first_name;
+                    __$("middle_name").value = sessionStorage.current_middle_name;
+                    __$("last_name").value = sessionStorage.current_last_name;
+                
+                }
+                
+            }
+            
+            timer = setTimeout("assignKnowns()", 500);
+        </script>
+    </head>
+    <body><div id='content'>
+            <div id='description' style='color:#777;position:absolute;margin-top:-70px;'></div><center>
+                <form  action='patient_dashboard.html' method="post">
+                    <table cellpadding=10>
+                        <tr>
+                            <th colspan=2>Mother Demographics</th>
+                        </tr>
+                        <tr>
+                            <td>First Name</td>
+                            <td>
+                                <input type='text' position='g' value='Text' field_type='text' 
+                                       condition="sessionStorage.search != 'true'" 
+                                       name='first_name' id='first_name' helptext="Mother's  First Name"
+                                       tt_onLoad="assignKnowns()" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Middle Name</td>
+                            <td>
+                                <input type='text' position='h' value='' field_type='text' optional 
+                                       condition="sessionStorage.search != 'true'" 
+                                       name='middle_name' id='middle_name' helptext="Mother's  Middle Name" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Last Name</td>
+                            <td>
+                                <input type='text' position='i' value='' field_type='text' 
+                                       condition="sessionStorage.search != 'true'" 
+                                       name='last_name' id='last_name' helptext="Mother's  Last Name" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Maiden Name</td>
+                            <td>
+                                <input type='text' position='j' value='' field_type='text' 
+                                       name='maiden_name' id='maiden_name' helptext="Mother's Maiden Name" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Nationality</td>
+                            <td>
+                                <select position='k' style='width: 100%' name='nationality' 
+                                        id='nationality' helptext="Mother's  Nationality">
+                                    <option></option>
+                                    <option>Malawian</option>
+                                    <option>Other</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Specify</td>
+                            <td>
+                                <input type='text' position='l' value='' field_type='text' 
+                                       name='specify' id='specify' helptext="Specify Mother's Nationality"
+                                       condition='$("nationality").value == "Other"' />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Id No.</td>
+                            <td>
+                                <input type='text' position='m' value='' field_type='text' optional 
+                                       name='id_no' id='id_no' helptext="Mother's Id No." />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Home District</td>
+                            <td>
+                                <select position='n' style='width: 100%' name='home_district' id='home_district' 
+                                        helptext="Mother's Home District">
+                                    <option></option>
+                                    <option>List of Districts</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>T/a</td>
+                            <td>
+                                <select position='o' style='width: 100%' name='ta' id='ta' helptext="Mother's T/A">
+                                    <option></option>
+                                    <option>List of T/As in District</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Village</td>
+                            <td>
+                                <select position='p' style='width: 100%' name='village' id='village' helptext="Mother's Village">
+                                    <option></option>
+                                    <option>List of villages under T/A</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Physical Address</td>
+                            <td>
+                                <textarea type='text' position='a2' value='Text' field_type='text' 
+                                          name='physical_address' id='physical_address' helptext='Physical Address'
+                                          tt_onUnLoad="saveRecord()" ></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align='center'>
+                                <input type='submit' value='Finish' />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </center>
+        </div>
+    </body>
+</html>

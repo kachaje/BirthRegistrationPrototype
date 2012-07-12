@@ -1,0 +1,221 @@
+<html>
+    <head>
+        <title>Father Demographics</title>
+        <meta http-equiv='content-type' content='text/html;charset=UTF-8' />
+        <script language='javascript' type='text/javascript' src='lib/javascripts/touchScreenToolkit.js' defer></script>
+        <script language="javascript">
+            tstUsername = "";
+            tstCurrentDate = "2010/03/12";
+            tt_cancel_destination = 'patient_dashboard.html';
+            tt_cancel_show = 'patient_dashboard.html';
+            
+            function saveRecord(){
+                
+                var person = {};
+                
+                var people = (localStorage.people != null ? JSON.parse(localStorage.people) : {});
+                
+                person = people[sessionStorage.current_id];
+                                
+                person["father_first_name"] = __$("first_name").value;
+                person["father_middle_name"] = __$("middle_name").value;
+                person["father_last_name"] = __$("last_name").value;
+                person["father_nationality"] = __$("nationality").value;  
+                
+                if(__$("nationality").value == "Other"){
+                    person["father_specify"] = __$("specify").value;  
+                } else {
+                    delete person["father_specify"];
+                }
+                
+                person["father_id_no"] = __$("id_no").value; 
+                person["father_home_district"] = __$("home_district").value; 
+                person["father_ta"] = __$("ta").value; 
+                person["father_village"] = __$("village").value; 
+                person["father_physical_address"] = __$("physical_address").value; 
+                
+                localStorage.people = JSON.stringify(people);
+                
+                delete sessionStorage.search
+            }
+            
+            function assignKnowns(){
+                if(sessionStorage.current_id != null){
+                    var person = {};
+                
+                    var people = (localStorage.people != null ? JSON.parse(localStorage.people) : {});
+                
+                    person = people[sessionStorage.current_id];
+                              
+                    if(typeof(person["father_first_name"]) != "undefined"){
+                        __$("first_name").value = person["father_first_name"];
+                        __$("middle_name").value = person["father_middle_name"];
+                        __$("last_name").value = person["father_last_name"];
+                        __$("nationality").value = person["father_nationality"];  
+                
+                        if(__$("nationality").value == "Other"){
+                            __$("specify").value = person["father_specify"];  
+                        } 
+                
+                        __$("id_no").value = person["father_id_no"]; 
+                        __$("home_district").value = person["father_home_district"]; 
+                        __$("ta").value = person["father_ta"]; 
+                        __$("village").value = person["father_village"]; 
+                        __$("physical_address").value = person["father_physical_address"]; 
+                        
+                        __$("touchscreenInput" + tstCurrentPage).value = (typeof(person["father_first_name"]) == "undefined" ? 
+                            sessionStorage.current_first_name : person["father_first_name"]);
+                    
+                    } else {
+                        __$("first_name").value = sessionStorage.current_first_name;
+                        __$("middle_name").value = sessionStorage.current_middle_name;
+                        __$("last_name").value = sessionStorage.current_last_name;        
+                    }
+                    
+                } else {
+                    
+                    __$("first_name").value = sessionStorage.current_first_name;
+                    __$("middle_name").value = sessionStorage.current_middle_name;
+                    __$("last_name").value = sessionStorage.current_last_name;
+                
+                }
+                
+            }
+            
+            function searchForFather(){
+                sessionStorage.next_search_url = "father_demographics.html"
+                sessionStorage.back_search_url = "patient_dashboard.html";
+                window.location = "search.html";
+            }
+            
+            timer = setTimeout("assignKnowns()", 500);
+        </script>
+    </head>
+    <body><div id='content'>
+            <div id='description' style='color:#777;position:absolute;margin-top:-70px;'></div><center>
+                <form  action='patient_dashboard.html' method="post">
+                    <table cellpadding=10>
+                        <tr>
+                            <th colspan=2>Father Demographics</th>
+                        </tr>
+                        <tr>
+                            <td>Is Father Known</td>
+                            <td>
+                                <select position='q' style='width: 100%' name='is_father_known'
+                                        condition="sessionStorage.search != 'true' && 
+                                        sessionStorage.father_known == null"  
+                                        id='is_father_known' helptext='Is Father Known'>
+                                    <option></option>
+                                    <option>Yes</option>
+                                    <option>No</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Search</td>
+                            <td>
+                                <input type='text' position='r' value='' field_type='text' 
+                                       name='first_name' id='search' helptext='Search for Father'
+                                       tt_onLoad="searchForFather()"
+                                       condition="sessionStorage.search != 'true' && 
+                                       sessionStorage.father_known == null && $('is_father_known').value == 'Yes'" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Father First Name</td>
+                            <td>
+                                <input type='text' position='r' value='' field_type='text' 
+                                       condition="sessionStorage.search != 'true'"
+                                       name='first_name' id='first_name' helptext='Father First Name'  />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Father Middle Name</td>
+                            <td>
+                                <input type='text' position='s' value='' field_type='text' optional 
+                                       condition="sessionStorage.search != 'true'"
+                                       name='middle_name' id='middle_name' helptext='Father Middle Name' />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Father Last Name</td>
+                            <td>
+                                <input type='text' position='t' value='' field_type='text' 
+                                       condition="sessionStorage.search != 'true'"
+                                       name='last_name' id='last_name' helptext='Last Name' />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Father Nationality</td>
+                            <td>
+                                <select position='u' style='width: 100%' name='nationality' 
+                                        id='nationality' helptext='Father Nationality'>
+                                    <option></option>
+                                    <option>Malawian</option>
+                                    <option>Other</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Specify</td>
+                            <td>
+                                <input type='text' position='v' value='' field_type='text' 
+                                       name='specify' id='specify' helptext='Specify Nationality' condition='$("nationality").value == "Other"' />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Id No.</td>
+                            <td>
+                                <input type='text' position='w' value='' field_type='text'  optional
+                                       name='id_no' id='id_no' helptext='Father Id No.' />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Home District</td>
+                            <td>
+                                <select position='x' style='width: 100%' name='home_district' 
+                                        id='home_district' helptext='Father Home District'>
+                                    <option></option>
+                                    <option>List of Districts</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>T/a</td>
+                            <td>
+                                <select position='y' style='width: 100%' name='ta' id='ta' 
+                                        helptext='Father T/A'>
+                                    <option></option>
+                                    <option>List of T/As in district</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Village</td>
+                            <td>
+                                <select position='z' style='width: 100%' name='village' 
+                                        id='village' helptext='Father Village'>
+                                    <option></option>
+                                    <option>List of villages</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Physical Address</td>
+                            <td>
+                                <textarea type='text' position='a2' value='' field_type='text' optional 
+                                          name='physical_address' id='physical_address' helptext='Physical Address'
+                                          tt_onUnLoad="saveRecord()" ></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align='center'>
+                                <input type='submit' value='Finish' />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </center>
+        </div>
+    </body>
+</html>

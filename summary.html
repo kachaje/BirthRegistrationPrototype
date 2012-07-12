@@ -1,0 +1,69 @@
+<html>
+    <head>
+        <title>Overview</title>
+        <script type="text/javascript" language="javascript">
+            
+            var person = {};
+                
+            if(sessionStorage.current_id != null){
+                
+                var people = (localStorage.people != null ? JSON.parse(localStorage.people) : {});
+                
+                person = people[sessionStorage.current_id];
+            }
+            
+            function __$(id){
+                return document.getElementById(id);
+            }
+            
+            function setFields(){
+                __$("mother").innerHTML = (typeof(person["mother_first_name"]) != "undefined" ? person["mother_first_name"] : "") +
+                    " " + (typeof(person["mother_middle_name"]) != "undefined" ? person["mother_middle_name"] : "") + 
+                    (typeof(person["mother_last_name"]) != "undefined" ? person["mother_last_name"] : "") +
+                    (typeof(person["mother_maiden_name"]) != "undefined" ?  " (" + person["mother_maiden_name"] + ")" : 
+                    "<i>(Unknown yet)</i>");               
+                
+                __$("father").innerHTML = (typeof(person["father_first_name"]) != "undefined" ? person["father_first_name"] : "") +
+                    " " + (typeof(person["father_middle_name"]) != "undefined" ? person["father_middle_name"] : "") + 
+                    (typeof(person["father_last_name"]) != "undefined" ? person["father_last_name"] : "<i>(Unknown yet)</i>") ;
+            }
+            
+            setTimeout("setFields()", 100);
+        </script>
+    </head>
+    <body>
+        <table cellpadding="5">
+            <tr>
+                <td colspan="3">
+                    <h2>Baby Summary</h2>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 30px;">
+                    &Tab;
+                </td>
+                <td colspan="2">
+                    <b>Parents</b> 
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &Tab;
+                </td>
+                <td style="padding-left: 30px;">
+                    Mother:
+                </td>
+                <td id="mother">&nbsp;</td>
+            </tr>
+            <tr>
+                <td>
+                    &Tab;
+                </td>
+                <td style="padding-left: 30px;">
+                    Father:
+                </td>
+                <td id="father">&nbsp;</td>
+            </tr>
+        </table>
+    </body>
+</html>
